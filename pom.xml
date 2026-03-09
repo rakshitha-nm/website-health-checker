@@ -9,13 +9,35 @@
  <artifactId>website-health-checker</artifactId>
  <version>1.0</version>
 
+ <name>Website Health Checker</name>
+ <description>DevOps Project for Monitoring Website Status</description>
+
+ <dependencies>
+
+     <!-- JUnit Dependency for Testing -->
+     <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <version>4.13.2</version>
+         <scope>test</scope>
+     </dependency>
+
+ </dependencies>
+
  <build>
      <plugins>
+
+         <!-- Maven Compiler Plugin -->
          <plugin>
              <groupId>org.apache.maven.plugins</groupId>
              <artifactId>maven-compiler-plugin</artifactId>
              <version>3.8.1</version>
+             <configuration>
+                 <source>1.8</source>
+                 <target>1.8</target>
+             </configuration>
          </plugin>
+
      </plugins>
  </build>
 
