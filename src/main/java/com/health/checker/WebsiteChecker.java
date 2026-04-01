@@ -7,6 +7,11 @@ public class WebsiteChecker {
 
     public static void checkWebsite(String websiteUrl) {
         try {
+
+            System.out.println("Checking website: " + websiteUrl);
+
+            long startTime = System.currentTimeMillis();
+
             URL url = new URL(websiteUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
@@ -15,7 +20,9 @@ public class WebsiteChecker {
             connection.connect();
 
             int responseCode = connection.getResponseCode();
-            long responseTime = connection.getConnectTimeout();
+
+            long endTime = System.currentTimeMillis();
+            long responseTime = endTime - startTime;
 
             if (responseCode == 200) {
                 System.out.println("Website is UP");
@@ -24,7 +31,7 @@ public class WebsiteChecker {
             }
 
             System.out.println("Response Code: " + responseCode);
-            System.out.println("Response Time: " + responseTime + "ms");
+            System.out.println("Response Time: " + responseTime + " ms");
 
         } catch (Exception e) {
             System.out.println("Error checking website: " + e.getMessage());

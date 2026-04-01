@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: website-health-checker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: website-health-checker
+  template:
+    metadata:
+      labels:
+        app: website-health-checker
+    spec:
+      containers:
+      - name: website-health-checker
+        image: rakshithamallesh/website-health-checker:latest
+        ports:
+        - containerPort: 8080
