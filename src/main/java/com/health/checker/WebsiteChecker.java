@@ -40,7 +40,7 @@ public class WebsiteChecker {
 
     public static void main(String[] args) {
 
-        String website = "https://www.google.com";
+        String website = "http://localhost:8080/check?url=https://github.com";
 
         checkWebsite(website);
     }
