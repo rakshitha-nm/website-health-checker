@@ -1,47 +1,65 @@
 package com.health.checker;
 
+import com.sun.net.httpserver.HttpServer;
+import com.sun.net.httpserver.HttpExchange;
+
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
 import java.net.URL;
 
 public class WebsiteChecker {
 
-    public static void checkWebsite(String websiteUrl) {
+    public static void main(String[] args) throws Exception {
+
+        HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+
+        server.createContext("/check", (HttpExchange exchange) -> {
+
+            String query = exchange.getRequestURI().getQuery();
+            String url = query.split("=")[1];
+
+            String result = checkWebsite(url);
+
+            exchange.sendResponseHeaders(200, result.length());
+            OutputStream os = exchange.getResponseBody();
+            os.write(result.getBytes());
+            os.close();
+
+        });
+
+        server.start();
+        System.out.println("Server started on port 8080");
+    }
+
+    public static String checkWebsite(String websiteUrl) {
+
         try {
-
-            System.out.println("Checking website: " + websiteUrl);
-
-            long startTime = System.currentTimeMillis();
 
             URL url = new URL(websiteUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
             connection.setRequestMethod("GET");
             connection.setConnectTimeout(5000);
-            connection.connect();
+
+            long start = System.currentTimeMillis();
 
             int responseCode = connection.getResponseCode();
 
-            long endTime = System.currentTimeMillis();
-            long responseTime = endTime - startTime;
+            long end = System.currentTimeMillis();
+            long responseTime = end - start;
 
             if (responseCode == 200) {
-                System.out.println("Website is UP");
+                return "Website is UP\nResponse Code: " + responseCode +
+                        "\nResponse Time: " + responseTime + " ms";
             } else {
-                System.out.println("Website is DOWN");
+                return "Website is DOWN\nResponse Code: " + responseCode;
             }
 
-            System.out.println("Response Code: " + responseCode);
-            System.out.println("Response Time: " + responseTime + " ms");
-
         } catch (Exception e) {
-            System.out.println("Error checking website: " + e.getMessage());
+            return "Error checking website: " + e.getMessage();
         }
-    }
 
-    public static void main(String[] args) {
-
-        String website = "http://localhost:8080/check?url=https://github.com";
-
-        checkWebsite(website);
     }
 }
