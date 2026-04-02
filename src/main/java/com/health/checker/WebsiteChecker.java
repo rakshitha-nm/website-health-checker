@@ -2,6 +2,7 @@ package com.health.checker;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import com.sun.net.httpserver.HttpServer;
@@ -34,6 +35,27 @@ public class WebsiteChecker {
 
         HttpServer server = HttpServer.create(new java.net.InetSocketAddress(8080), 0);
 
+        // Serve background image
+        server.createContext("/background.jpg", exchange -> {
+
+            InputStream is = WebsiteChecker.class.getClassLoader()
+                    .getResourceAsStream("background.jpg");
+
+            if (is == null) {
+                exchange.sendResponseHeaders(404, 0);
+                return;
+            }
+
+            byte[] imageBytes = is.readAllBytes();
+
+            exchange.getResponseHeaders().set("Content-Type", "image/jpeg");
+            exchange.sendResponseHeaders(200, imageBytes.length);
+
+            OutputStream os = exchange.getResponseBody();
+            os.write(imageBytes);
+            os.close();
+        });
+
         server.createContext("/", exchange -> {
 
             String html = "<html><head><title>Website Health Checker</title>"
@@ -45,7 +67,7 @@ public class WebsiteChecker {
                     + "display:flex;"
                     + "justify-content:center;"
                     + "align-items:center;"
-                    + "background-image:url('background.jpg');"
+                    + "background-image:url('/background.jpg');"
                     + "background-size:cover;"
                     + "background-position:center;"
                     + "}"
