@@ -10,4 +10,5 @@ public class WebsiteHealthCheckerTest {
         int responseCode = 200;
         assertEquals(200, responseCode);
     }
+   
 }
