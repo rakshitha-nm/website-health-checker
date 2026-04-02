@@ -38,7 +38,7 @@ public class WebsiteChecker {
 
             String html = "<html><head><title>Website Health Checker</title></head>"
                     + "<body style='font-family:Arial;text-align:center;margin-top:120px;'>"
-                    + "<h1>🌐 Website Health Checker</h1>"
+                    + "<h1> Website Health Checker</h1>"
                     + "<form method='get'>"
                     + "<input type='text' name='url' placeholder='Enter website URL' style='padding:10px;width:300px;'>"
                     + "<br><br>"
