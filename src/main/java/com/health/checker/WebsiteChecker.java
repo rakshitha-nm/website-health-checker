@@ -20,9 +20,9 @@ public class WebsiteChecker {
             int responseCode = connection.getResponseCode();
 
             if (responseCode < 400) {
-                return "Website is UP (Response Code: " + responseCode + ")";
+                return "UP (Response Code: " + responseCode + ")";
             } else {
-                return "Website is DOWN (Response Code: " + responseCode + ")";
+                return "DOWN (Response Code: " + responseCode + ")";
             }
 
         } catch (Exception e) {
@@ -36,13 +36,39 @@ public class WebsiteChecker {
 
         server.createContext("/", exchange -> {
 
-            String html = "<html><head><title>Website Health Checker</title></head>"
-                    + "<body style='font-family:Arial;text-align:center;margin-top:120px;'>"
-                    + "<h1> Website Health Checker</h1>"
+            String html = "<html><head><title>Website Health Checker</title>"
+                    + "<style>"
+                    + "body{"
+                    + "font-family:Arial;"
+                    + "height:100vh;"
+                    + "margin:0;"
+                    + "display:flex;"
+                    + "justify-content:center;"
+                    + "align-items:center;"
+                    + "background-image:url('background.jpg');"
+                    + "background-size:cover;"
+                    + "background-position:center;"
+                    + "}"
+                    + ".container{"
+                    + "background:white;"
+                    + "padding:40px;"
+                    + "border-radius:10px;"
+                    + "box-shadow:0px 0px 15px rgba(0,0,0,0.3);"
+                    + "text-align:center;"
+                    + "width:400px;"
+                    + "}"
+                    + "input{padding:10px;width:90%;margin-top:10px;font-size:16px;}"
+                    + "button{padding:10px 20px;margin-top:15px;background:#007bff;color:white;border:none;border-radius:5px;cursor:pointer;}"
+                    + "button:hover{background:#0056b3;}"
+                    + "a{display:block;margin-top:10px;color:blue;font-size:16px;}"
+                    + "</style>"
+                    + "</head><body>"
+                    + "<div class='container'>"
+                    + "<h1>Website Health Checker</h1>"
                     + "<form method='get'>"
-                    + "<input type='text' name='url' placeholder='Enter website URL' style='padding:10px;width:300px;'>"
-                    + "<br><br>"
-                    + "<button style='padding:10px 20px;'>Check Website</button>"
+                    + "<input type='text' name='url' placeholder='Enter website URL'>"
+                    + "<br>"
+                    + "<button>Check Website</button>"
                     + "</form>";
 
             String query = exchange.getRequestURI().getQuery();
@@ -57,10 +83,18 @@ public class WebsiteChecker {
 
                 String result = checkWebsite(url);
 
-                html += "<h2 style='margin-top:30px;color:blue'>" + result + "</h2>";
+                if (result.contains("UP")) {
+
+                    html += "<h2 style='margin-top:25px;color:green'>Website is " + result + "</h2>";
+                    html += "<a href='" + url + "' target='_blank'>Click here to open the website</a>";
+
+                } else {
+
+                    html += "<h2 style='margin-top:25px;color:red'>Website is " + result + "</h2>";
+                }
             }
 
-            html += "</body></html>";
+            html += "</div></body></html>";
 
             exchange.sendResponseHeaders(200, html.getBytes().length);
 
